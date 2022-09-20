@@ -7,7 +7,6 @@ services:
     command: gunicorn content_project.wsgi:application --bind 0.0.0.0:8000 # python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./app/:/usr/src/app/
-      - static_volume:/usr/src/app/static
     ports:
       - 8000:8000
     environment:
@@ -19,31 +18,3 @@ services:
       - DATABASE=postgres
       - VIRTUAL_HOST=ec2-13-57-7-72.us-west-1.compute.amazonaws.com
       - VIRTUAL_PORT=8000
-    # depends_on:
-    #   - pg 
-
-  pg:
-    container_name: pg_content_management
-    image: postgres:13.2-alpine
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin123
-      POSTGRES_DB: content_management_db
-      POSTGRES_HOST_AUTH_METHOD: trust
-    ports:
-      - 5440:5432
-    volumes:
-      - ./data:/var/lib/postgresql/data
-
-  nginx:
-    build: ./nginx
-    image: 276629917546.dkr.ecr.us-west-1.amazonaws.com/django_project:django_project_nginx
-    volumes:
-      - static_volume:/usr/src/app/static
-    ports:
-      - 8000:80
-    depends_on:
-      - web
-volumes:
-  static_volume:
