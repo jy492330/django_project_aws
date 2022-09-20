@@ -1,0 +1,1 @@
+# django project on AWS
